@@ -11,8 +11,20 @@ namespace vector {
  */
 void
 strvec::push_back(const std::string& str) {
+    std::cout << "Called the regular version of push_back" << std::endl;
     check_n_alloc();
     alloc.construct(first_free++, str);
+}
+
+/*
+ * @brief: This is the rvalue version of strvec. This can use the move
+ *          operation to steal resources from the incoming operand
+ */
+void
+strvec::push_back(std::string &&str) {
+    std::cout << "Called the move version of push back" << std::endl;
+    check_n_alloc();
+    alloc.construct(first_free++, std::move(str));
 }
 
 /*

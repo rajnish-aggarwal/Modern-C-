@@ -12,6 +12,8 @@ int main() {
     v.push_back("Hello");
     v.push_back("Rajnish");
     v.push_back("Aggarwal");
+    std::string s = "Now I am calling normal push_back";
+    v.push_back(s);
     for (auto i = v.begin(); i != v.end(); ++i) {
         std::cout << *i << " ";
     }

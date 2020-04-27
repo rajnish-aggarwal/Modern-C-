@@ -17,6 +17,8 @@ public:
     std::string* begin() { return elements; }
     std::string* end() { return capacity_; }
     void push_back(const std::string& string);
+    // define a push_back function that takes an rvalue
+    void push_back(std::string &&string);
     // copy constructor
     strvec(const strvec&);
     // copy assignment operator
