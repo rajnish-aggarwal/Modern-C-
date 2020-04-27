@@ -24,6 +24,10 @@ public:
     /// assignment operator since it is exception safe.
     /// Taking argument by value means the compiler will create
     /// a copy for us.
+    //
+    /// This is also usable as the move assignment operator.
+    /// When an lvalue is passed to the assignment, the argument
+    /// is copied and when an rvalue is passed it is moved!
     HashPtr& operator=(HashPtr rhs) {
         swap(rhs, *this);
         /// The rhs object string will be freed if this was
@@ -39,6 +43,12 @@ public:
     friend void swap (HashPtr& lhs, HashPtr& rhs);
     const std::string& get_str() const {
         return *string_ptr;
+    }
+    // move constructor for hashptr
+    HashPtr(HashPtr &&h) :
+        string_ptr(h.string_ptr), ref_count(h.ref_count) {
+        h.string_ptr = nullptr;
+        h.ref_count = nullptr;
     }
 };
 
