@@ -1,4 +1,5 @@
 #include "strvec.hpp"
+#include <iostream>
 
 namespace vector {
 
@@ -18,6 +19,7 @@ strvec::push_back(const std::string& str) {
  *          each object manages its own memory.
  */
 strvec::strvec(const strvec& v) {
+    std::cout << "Called copy ctor" << std::endl;
     auto ret_type = alloc_n_copy(v.elements, v.first_free);
     elements = ret_type.first;
     first_free = capacity_ = ret_type.second;
@@ -30,6 +32,7 @@ strvec::strvec(const strvec& v) {
  */
 strvec&
 strvec::operator=(const strvec& rhs) {
+    std::cout << "called copy assignment operator" << std::endl;
     // make sure to prevent against possible self assignment.
     auto ret_type = alloc_n_copy(rhs.elements, rhs.first_free);
     free();
