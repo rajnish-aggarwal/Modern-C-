@@ -30,7 +30,10 @@
 // folder of the LHS message will now be that of the RHS message.
 // The previous message folders need to be updated to reflect the
 // removal of the message.
-
+//
+// We also defined move operations for our message class and since
+// inserting to a set can throw a bad_alloc exception, we do not mark
+// these functions as noexcept
 
 /*
  * @brief: The below message class implements the utilies of the
@@ -52,10 +55,15 @@ public:
     message_t& operator=(const message_t& rhs);
     // destructor
     ~message_t();
+    // move ctor
+    message_t(message_t &&m);
+    // move assignment ctor
+    message_t& operator=(message_t &&rhs);
     friend void swap(message_t& lhs, message_t& rhs);
 private:
     void add_msg_to_folders();
     void remove_msg_from_folders();
+    void move_folders(message_t *);
 private:
     // text of the file
     std::string message_;

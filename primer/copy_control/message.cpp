@@ -116,4 +116,42 @@ swap(message_t& lhs, message_t& rhs) {
     }
 }
 
+/*
+ * @brief: define the move ctor for the message class, this will
+ *          not be exception safe since adding elements to set
+ *          can throw an exception.
+ */
+message_t::message_t(message_t &&m) :
+    message_(m.message_) {
+    move_folders(&m);
+}
+
+/*
+ * @brief: define the move assignment operator. This is again not
+ *          exception safe. It must guard against self assignment
+ */
+message_t&
+message_t::operator=(message_t &&rhs) {
+    if (this != &rhs) {
+        remove_msg_from_folders();
+        message_ = rhs.message_;
+        move_folders(&rhs);
+    }
+    return *this;
+}
+
+/*
+ * @brief: This is a private utility, which removes m from the folders
+ *          and adds this to it.
+ */
+void message_t::move_folders(message_t *m) {
+    for (auto folder : m->folders_) {
+        folder->remove_msg(m);
+        folder->add_msg(this);
+    }
+
+    // use the move operator defined on std::set
+    folders_ = std::move(m->folders_);
+    m->folders_.clear();
+}
 } // end namespace communication
