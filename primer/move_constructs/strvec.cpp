@@ -1,5 +1,6 @@
 #include "strvec.hpp"
 #include <iostream>
+#include <iterator>
 
 namespace vector {
 
@@ -70,20 +71,22 @@ strvec::free() {
  *          it would be a waste of time if we copy every element
  *          from its source to destination. For solving this,
  *          the library has introduced the move operation!
+ *
+ *          The uninitialized_copy does what it says, it copies
+ *          elements from the source to the destination. However,
+ *          we can use move iterators (whose dereference results in
+ *          an rvalue) to move the elements, rather than copying it.
  */
 void
 strvec::reallocate() {
     size_type sz = size() ? 2 * size() : 1;
     auto new_start = alloc.allocate(sz);
-    auto curr_start = elements;
-    auto start = new_start;
-    // Our realloc moves resources from source to destination.
-    while (curr_start != first_free) {
-        alloc.construct(start++, std::move(*curr_start++));
-    }
+    auto last = std::uninitialized_copy(std::make_move_iterator(begin()),
+                            std::make_move_iterator(end()),
+                            new_start);
     free();
     elements = new_start;
-    first_free = start;
+    first_free = last;
     capacity_ = elements + sz;
 }
 
